@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violence Detection Monitoring System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo-circle">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1>Violence Detection System</h1>
+                <p>Real-Time Monitoring & Alerts</p>
+            </div>
+            <div class="login-form-container">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" placeholder="Enter your username or email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="error-message" class="error-message" style="display: none;"></div>
+                    <button type="submit" class="btn-primary btn-full">Login</button>
+                    <div class="forgot-password">
+                        <a href="#">Forgot Password?</a>
+                    </div>
+                </form>
+            </div>
+            <p class="login-footer">Secure Access Only • Authorized Personnel</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="main-app" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Violence Detection</h1>
+                <p>Monitoring System</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-page="live-monitoring">
+                    <i class="fas fa-video"></i> Live Monitoring
+                </a>
+                <a href="#" class="nav-item" data-page="incidents">
+                    <i class="fas fa-exclamation-triangle"></i> Incidents
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </a>
+                <a href="#" class="nav-item" data-page="users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+                <a href="#" class="nav-item logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="content-page active">
+                <div class="page-header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p>Real-time monitoring overview</p>
+                    </div>
+                    <div class="current-time">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <div id="current-time" class="time"></div>
+                            <div id="current-date" class="date"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div>
+                                <p class="stat-label">Active Cameras</p>
+                                <p class="stat-value">12</p>
+                                <p class="stat-change">+2 online</p>
+                            </div>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div>
+                                <p class="stat-label">Total Incidents Today</p>
+                                <p class="stat-value">8</p>
+                                <p class="stat-change">+3 from yesterday</p>
+                            </div>
+                            <div class="stat-icon red">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div>
+                                <p class="stat-label">System Status</p>
+                                <p class="stat-value">Operational</p>
+                                <p class="stat-change">99.8% uptime</p>
+                            </div>
+                            <div class="stat-icon green">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div>
+                                <p class="stat-label">Detection Accuracy</p>
+                                <p class="stat-value">94.2%</p>
+                                <p class="stat-change">Last 30 days</p>
+                            </div>
+                            <div class="stat-icon purple">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Feeds and Alerts -->
+                <div class="dashboard-grid">
+                    <div class="card camera-feeds">
+                        <h2>Live Camera Feeds</h2>
+                        <div class="camera-grid">
+                            <div class="camera-feed">
+                                <div class="feed-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Camera 01</p>
+                                    <div class="live-indicator">
+                                        <span class="pulse"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="camera-feed">
+                                <div class="feed-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Camera 02</p>
+                                    <div class="live-indicator">
+                                        <span class="pulse"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="camera-feed">
+                                <div class="feed-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Camera 03</p>
+                                    <div class="live-indicator">
+                                        <span class="pulse"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="camera-feed">
+                                <div class="feed-placeholder">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Camera 04</p>
+                                    <div class="live-indicator">
+                                        <span class="pulse"></span>
+                                        <span>LIVE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card alerts-panel">
+                        <div class="alerts-header">
+                            <h2>Real-time Alerts</h2>
+                            <span class="badge badge-red">3 Active</span>
+                        </div>
+                        <div id="alerts-container" class="alerts-list"></div>
+                    </div>
+                </div>
+
+                <!-- Incident Summary -->
+                <div class="card">
+                    <h2>Incident Summary - Last 24 Hours</h2>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <p class="summary-value red">3</p>
+                            <p class="summary-label">High Severity</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-value yellow">4</p>
+                            <p class="summary-label">Medium Severity</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-value blue">1</p>
+                            <p class="summary-label">Low Severity</p>
+                        </div>
+                        <div class="summary-item">
+                            <p class="summary-value green">6</p>
+                            <p class="summary-label">Resolved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Monitoring Page -->
+            <div id="live-monitoring-page" class="content-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Live Monitoring</h1>
+                        <p>Real-time surveillance feed from all cameras</p>
+                    </div>
+                </div>
+
+                <div class="card controls-bar">
+                    <div class="controls-left">
+                        <div class="control-item">
+                            <span class="pulse-green"></span>
+                            <span>9 Cameras Active</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="control-item">
+                            <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                            <span>2 Active Alerts</span>
+                        </div>
+                    </div>
+                    <div class="controls-right">
+                        <select class="control-select">
+                            <option>All Cameras</option>
+                            <option>Alert Only</option>
+                            <option>Main Entrance</option>
+                            <option>Parking Areas</option>
+                        </select>
+                        <select class="control-select">
+                            <option>3x3 Grid</option>
+                            <option>2x2 Grid</option>
+                            <option>4x4 Grid</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="live-cameras-grid" class="live-cameras-grid"></div>
+            </div>
+
+            <!-- Incidents Page -->
+            <div id="incidents-page" class="content-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Incidents & Alerts</h1>
+                        <p>View and manage all detected incidents</p>
+                    </div>
+                    <button class="btn-primary">
+                        <i class="fas fa-download"></i> Export Report
+                    </button>
+                </div>
+
+                <div class="card filters-bar">
+                    <div class="filters-grid">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="incident-search" placeholder="Search incidents...">
+                        </div>
+                        <select id="filter-severity" class="filter-select">
+                            <option value="all">All Severities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                        <select id="filter-status" class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="review">Under Review</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                        <select id="sort-by" class="filter-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="severity">By Severity</option>
+                        </select>
+                    </div>
+                    <div class="view-toggle">
+                        <span>View:</span>
+                        <button class="view-btn active" data-view="table">Table</button>
+                        <button class="view-btn" data-view="cards">Cards</button>
+                    </div>
+                </div>
+
+                <div class="results-count">
+                    <p id="incidents-count">Showing 6 of 6 incidents</p>
+                </div>
+
+                <div id="incidents-table-view" class="card table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Camera</th>
+                                <th>Severity</th>
+                                <th>Confidence</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incidents-table-body"></tbody>
+                    </table>
+                </div>
+
+                <div id="incidents-cards-view" class="incidents-cards-grid" style="display: none;"></div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports-page" class="content-page">
+                <div class="page-header">
+                    <div>
+                        <h1>Reports & Analytics</h1>
+                        <p>Statistical analysis and incident trends</p>
+                    </div>
+                    <div class="header-controls">
+                        <select class="control-select">
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Last 3 Months</option>
+                            <option>Last Year</option>
+                        </select>
+                        <button class="btn-primary">Generate Report</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Total Incidents</p>
+                            <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                        </div>
+                        <p class="stat-value">40</p>
+                        <div class="stat-trend down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>12% less than last week</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">High Severity</p>
+                            <div class="severity-dot red"></div>
+                        </div>
+                        <p class="stat-value">12</p>
+                        <p class="stat-change">30% of total</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Avg Response Time</p>
+                            <i class="fas fa-clock" style="color: #3b82f6;"></i>
+                        </div>
+                        <p class="stat-value">3.2m</p>
+                        <div class="stat-trend up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8% slower than average</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Detection Accuracy</p>
+                            <div class="severity-dot green"></div>
+                        </div>
+                        <p class="stat-value">94.2%</p>
+                        <p class="stat-change">Last 30 days</p>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="card">
+                        <h2>Daily Incidents</h2>
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h2>Severity Distribution</h2>
+                        <canvas id="severityChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h2>Hourly Distribution</h2>
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                    <div class="card">
+                        <h2>Incidents by Camera</h2>
+                        <canvas id="cameraChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="insights-grid">
+                    <div class="insight-card red">
+                        <h3>Peak Hour Alert</h3>
+                        <p class="insight-value">12:00 - 15:00</p>
+                        <p class="insight-desc">Highest incident frequency window</p>
+                    </div>
+                    <div class="insight-card yellow">
+                        <h3>Top Location</h3>
+                        <p class="insight-value">Camera 01</p>
+                        <p class="insight-desc">Entrance Gate - 15 incidents</p>
+                    </div>
+                    <div class="insight-card green">
+                        <h3>Improvement</h3>
+                        <p class="insight-value">-12%</p>
+                        <p class="insight-desc">Incident reduction vs last period</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div id="users-page" class="content-page">
+                <div class="page-header">
+                    <div>
+                        <h1>User Management</h1>
+                        <p>Manage user accounts and access permissions</p>
+                    </div>
+                    <button class="btn-primary" id="add-user-btn">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+
+                <div class="users-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Total Users</p>
+                            <i class="fas fa-users" style="color: #3b82f6;"></i>
+                        </div>
+                        <p class="stat-value" id="total-users">5</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Active Users</p>
+                            <div class="severity-dot green"></div>
+                        </div>
+                        <p class="stat-value" id="active-users">4</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <p class="stat-label">Admins</p>
+                            <i class="fas fa-shield-alt" style="color: #ef4444;"></i>
+                        </div>
+                        <p class="stat-value" id="admin-users">1</p>
+                    </div>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="user-search" placeholder="Search users...">
+                    </div>
+                </div>
+
+                <div class="card table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Contact</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <h2>Role Permissions</h2>
+                    <div class="permissions-grid">
+                        <div class="permission-card red">
+                            <div class="permission-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Admin</h3>
+                            </div>
+                            <ul class="permission-list">
+                                <li>✓ Full system access</li>
+                                <li>✓ User management</li>
+                                <li>✓ System configuration</li>
+                                <li>✓ All monitoring features</li>
+                                <li>✓ Report generation</li>
+                            </ul>
+                        </div>
+                        <div class="permission-card blue">
+                            <div class="permission-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Operator</h3>
+                            </div>
+                            <ul class="permission-list">
+                                <li>✓ Live monitoring</li>
+                                <li>✓ Incident management</li>
+                                <li>✓ Alert handling</li>
+                                <li>✓ Basic reporting</li>
+                                <li>✗ System configuration</li>
+                            </ul>
+                        </div>
+                        <div class="permission-card gray">
+                            <div class="permission-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>Viewer</h3>
+                            </div>
+                            <ul class="permission-list">
+                                <li>✓ View live feeds</li>
+                                <li>✓ View incidents</li>
+                                <li>✓ View reports</li>
+                                <li>✗ Modify settings</li>
+                                <li>✗ User management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- User Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New User</h2>
+            </div>
+            <div class="modal-body">
+                <form id="user-form">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="user-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="user-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="user-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="user-role" required>
+                            <option value="Viewer">Viewer</option>
+                            <option value="Operator">Operator</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="user-status" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancel-user-btn">Cancel</button>
+                <button class="btn-primary" id="save-user-btn">Save User</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
