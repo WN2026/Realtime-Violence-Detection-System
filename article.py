@@ -131,3 +131,8 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+
+("CAM_003", "Hikvision ColorVu DS-2CD2T83G2-2LI",
+         "New York, NYU, Main Gate",
+         "0","America/New_York"),

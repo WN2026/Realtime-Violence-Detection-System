@@ -10,7 +10,7 @@ def get_db_connection():
     conn = mysql.connector.connect(
         host="localhost",
         user="********",
-        password="***********",
+        password="********",
         database="violence_db"
     )
     return conn
@@ -47,17 +47,15 @@ def init_camera_database():
 
     cameras = [
 
-        ("CAM_001", "Hikvision ColorVu DS-2CD2T83G2-2LI",
-         "Al-Qassim, Mulayda, College of Computer, Main Hall",
-         "rtsp://192.168.1.10:554/Streaming/Channels/101", "Asia/Qassim"),
-
         ("CAM_002", "Hikvision ColorVu DS-2CD2T83G2-2LI",
          "Riyadh, King Saud University, College of Medicine, Sports Field",
          "rtsp://192.168.1.11:554/Streaming/Channels/101", "Asia/Riyadh"),
 
-        ("CAM_003", "Hikvision ColorVu DS-2CD2T83G2-2LI",
-         "New York, NYU, Main Gate",
-         "0","America/New_York"),
+        ("CAM_001", "Hikvision ColorVu DS-2CD2T83G2-2LI",
+          "Al-Qassim, Mulayda, College of Computer, Main Hall",
+          "****************************", "Asia/Riyadh"),
+
+        
     ]
 
     for cam in cameras:

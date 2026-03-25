@@ -1,5 +1,5 @@
 from storage_unit import init_violence_database, init_camera_database, get_db_connection
-from processing_unit import process_camera
+from processing_unit import run_camera
 import threading
 
 init_violence_database()
@@ -13,9 +13,9 @@ conn.close()
 
 threads = []
 for url in stream_urls:
-    t = threading.Thread(target=process_camera, args=(url,))
+    t = threading.Thread(target=run_camera, args=(url,))
     t.start()
     threads.append(t)
 
 for t in threads:
-    t.join()
+    t.join() 
