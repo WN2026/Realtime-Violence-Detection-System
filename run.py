@@ -1,9 +1,12 @@
-from storage_unit import init_violence_database, init_camera_database, get_db_connection
+from storage_unit import create_database, init_camera_table, get_db_connection, init_users_table, init_violence_table
 from processing_unit import run_camera
 import threading
 
-init_violence_database()
-init_camera_database()
+create_database()
+init_camera_table()
+init_users_table()
+init_violence_table()
+
 
 conn = get_db_connection()
 cursor = conn.cursor()

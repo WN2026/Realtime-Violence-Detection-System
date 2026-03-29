@@ -2,7 +2,7 @@ import av
 import cv2
 import numpy as np
 
-rtsp_url = "************************************"
+rtsp_url = "**********************8"
 
 container = av.open(rtsp_url, options={"rtsp_transport": "tcp"})
 
