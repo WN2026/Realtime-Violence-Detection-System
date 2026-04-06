@@ -4,7 +4,8 @@ from tensorflow.keras.models import load_model
 
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
-
+from detection.weapon_detector import detect_weapon
+from classification.severity_classifier import classify_violence
 # تحميل موديل العنف
 model = load_model("best_acc_final.keras")
 
@@ -34,6 +35,8 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
+    weapon_detected, weapon_type = detect_weapon(frame)
+
 
     humans = pose_estimator.inference(frame)
 
@@ -111,10 +114,19 @@ while True:
             prediction = model.predict(input_data, verbose=0)
 
             score = prediction[0][0]
+            severity = classify_violence(score, weapon_type)
+            label = severity
 
-            if score > 0.5:
-                label = "VIOLENCE"
+            if severity == "NON VIOLENCE":
+               color = (0,255,0)
+            elif severity == "LOW":
+               color = (0,255,255)
+            elif severity == "MEDIUM":
+               color = (0,165,255)
+            else:  # HIGH
                 color = (0,0,255)
+
+            
 
         cv2.putText(frame,
                     label,

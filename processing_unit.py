@@ -7,7 +7,8 @@ from tensorflow.keras.models import load_model
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 from storage_unit import save_violence_event, get_camera_info_by_stream
-
+from detection.weapon_detector import detect_weapon
+from classification.severity_classifier import classify_violence
 SEQUENCE_LENGTH = 63
 FRAME_QUEUE_SIZE = 10
 
@@ -89,12 +90,23 @@ def process_frames(frame_queue, camera_id, location, tz_name):
                     input_data = np.array(sequence).reshape(1, 63, 72)
                     prediction = model.predict(input_data, verbose=0, batch_size=1)
                     score = prediction[0][0]
-                    if score > 0.5:
-                        label = "VIOLENCE"
+
+                    weapon_detected, weapon_type = detect_weapon(frame)
+
+                    level = classify_violence(score, weapon_type)
+
+                    label = level
+                    if level == "NON VIOLENCE":
+                        color = (0, 255, 0)
+                    elif level == "LOW":
+                         color = (0, 255, 255)
+                    elif level == "MEDIUM":
+                      color = (0, 165, 255)
+                    else:  # HIGH
                         color = (0, 0, 255)
-                        if prev_label == "NON VIOLENCE":
-                            save_violence_event(frame, camera_id, location, tz_name)
-                prev_label = label
+                    if level != "NON VIOLENCE" and prev_label == "NON VIOLENCE":
+                       save_violence_event(frame, camera_id, location, tz_name)
+                    prev_label = level
                 cv2.putText(frame, label, (int(cx), int(cy)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
             h, w = frame.shape[:2]

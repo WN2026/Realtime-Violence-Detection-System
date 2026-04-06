@@ -11,8 +11,8 @@ except ImportError:
 def create_database():
     conn = mysql.connector.connect(
         host="localhost",
-        user="**********",
-        password="***********"
+        user="root",
+        password="1234"
     )
     cursor = conn.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS violence_system_db")
@@ -22,8 +22,8 @@ def create_database():
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
-        user="************",
-        password="***********",
+        user="root",
+        password="1234",
         database="violence_system_db"
     )
 
