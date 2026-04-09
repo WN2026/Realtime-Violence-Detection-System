@@ -105,7 +105,7 @@ def process_frames(frame_queue, camera_id, location, tz_name):
                     else:  # HIGH
                         color = (0, 0, 255)
                     if level != "NON VIOLENCE" and prev_label == "NON VIOLENCE":
-                       save_violence_event(frame, camera_id, location, tz_name)
+                       save_violence_event(frame, camera_id, location, tz_name,score,level)
                     prev_label = level
                 cv2.putText(frame, label, (int(cx), int(cy)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
