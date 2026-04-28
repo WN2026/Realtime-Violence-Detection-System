@@ -12,3 +12,4 @@ def classify_violence(score, weapon_type):
         return "MEDIUM"
     else:
         return "HIGH"
+        

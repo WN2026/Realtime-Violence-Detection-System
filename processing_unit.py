@@ -9,6 +9,8 @@ from tf_pose.networks import get_graph_path
 from storage_unit import save_violence_event, get_camera_info_by_stream
 from detection.weapon_detector import detect_weapon
 from classification.severity_classifier import classify_violence
+from alerts_manager import alerts_manager
+
 SEQUENCE_LENGTH = 63
 FRAME_QUEUE_SIZE = 10
 
@@ -37,15 +39,17 @@ def read_stream(stream_url, frame_queue):
         frame_queue.put(img)
     container.close()
 
-def process_frames(frame_queue, camera_id, location, tz_name):
+def process_frames(frame_queue, camera_id, location, tz_name ,stream_url):
     model = load_model("best_acc_final.keras")
     pose_estimator = TfPoseEstimator(get_graph_path("mobilenet_thin_432x368"), target_size=(432, 368))
     sequence = []
     prev_label = "NON VIOLENCE"
+    frame_id = 0 
 
     while True:
         if not frame_queue.empty():
             frame = frame_queue.get()
+            frame_id += 1
             humans = pose_estimator.inference(frame)
             individuals = []
 
@@ -106,6 +110,13 @@ def process_frames(frame_queue, camera_id, location, tz_name):
                         color = (0, 0, 255)
                     if level != "NON VIOLENCE" and prev_label == "NON VIOLENCE":
                        save_violence_event(frame, camera_id, location, tz_name)
+                        alerts_manager.send_alert(
+                            camera_url=stream_url,
+                            severity=level,
+                            score=float(score),
+                            weapon_type=weapon_type if weapon_detected else "none",
+                            frame_id=frame_id
+                        )
                     prev_label = level
                 cv2.putText(frame, label, (int(cx), int(cy)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
@@ -123,7 +134,7 @@ def run_camera(stream_url):
     camera_id, location, tz_name = get_camera_info_by_stream(stream_url)
     frame_queue = Queue(maxsize=FRAME_QUEUE_SIZE)
     t_read = threading.Thread(target=read_stream, args=(stream_url, frame_queue), daemon=True)
-    t_process = threading.Thread(target=process_frames, args=(frame_queue, camera_id, location, tz_name), daemon=True)
+    t_process = threading.Thread(target=process_frames, args=(frame_queue, camera_id, location, tz_name,stream_url), daemon=True)
     t_read.start()
     t_process.start()
     t_read.join()

@@ -1,5 +1,6 @@
 from storage_unit import create_database, init_camera_table, get_db_connection, init_users_table, init_violence_table
 from processing_unit import run_camera
+from alerts_manager import alerts_manager
 import threading
 
 create_database()
