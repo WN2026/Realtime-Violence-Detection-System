@@ -12,7 +12,7 @@ def create_database():
     conn = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="1234"
+        password=""
     )
     cursor = conn.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS violence_system_db")
@@ -23,7 +23,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="1234",
+        password="",
         database="violence_system_db"
     )
 

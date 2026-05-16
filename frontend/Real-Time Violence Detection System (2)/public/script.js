@@ -885,3 +885,172 @@ function saveUser() {
     renderUsers();
     updateUserStats();
 }
+
+// ══════════════════════════════════════════════════════════════
+//  REAL-TIME ALERTS via WebSocket (alerts_manager → frontend)
+// ══════════════════════════════════════════════════════════════
+
+const WS_URL = 'ws://localhost:8765';
+let ws = null;
+let wsReconnectTimer = null;
+
+function connectWebSocket() {
+    if (ws && ws.readyState === WebSocket.OPEN) return;
+
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = () => {
+        console.log('WebSocket connected');
+        updateWsStatus(true);
+        if (wsReconnectTimer) { clearTimeout(wsReconnectTimer); wsReconnectTimer = null; }
+    };
+
+    ws.onclose = () => {
+        updateWsStatus(false);
+        wsReconnectTimer = setTimeout(connectWebSocket, 4000);
+    };
+
+    ws.onerror = () => updateWsStatus(false);
+
+    ws.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'VIOLENCE_ALERT') handleLiveAlert(data);
+        } catch (e) { console.error('WS parse error', e); }
+    };
+}
+
+function updateWsStatus(connected) {
+    const dot  = document.getElementById('ws-status-dot');
+    const text = document.getElementById('ws-status-text');
+    if (!dot || !text) return;
+    dot.style.background  = connected ? '#22c55e' : '#ef4444';
+    text.textContent      = connected ? 'Live' : 'Reconnecting…';
+}
+
+function handleLiveAlert(data) {
+    // 1. Add to incidents array
+    const newIncident = {
+        id:          incidents.length + 1,
+        timestamp:   data.timestamp,
+        cameraId:    data.camera,
+        cameraName:  data.camera,
+        severity:    capitalize(data.severity),
+        confidence:  Math.round(data.score * 100),
+        status:      'Active',
+        description: `Weapon detected: ${data.weapon}`
+    };
+    incidents.unshift(newIncident);
+
+    // 2. Re-render affected sections
+    renderAlerts();
+    renderIncidents();
+    updateDashboardCounts();
+    showToast(data);
+}
+
+function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function updateDashboardCounts() {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const todayCount = incidents.filter(i => i.timestamp.startsWith(todayStr)).length;
+
+    const totalEl = document.querySelector('.stat-card:nth-child(2) .stat-value');
+    if (totalEl) totalEl.textContent = todayCount;
+
+    const highCount   = incidents.filter(i => i.severity === 'High').length;
+    const medCount    = incidents.filter(i => i.severity === 'Medium').length;
+    const lowCount    = incidents.filter(i => i.severity === 'Low').length;
+
+    const summaryVals = document.querySelectorAll('.summary-value');
+    if (summaryVals[0]) summaryVals[0].textContent = highCount;
+    if (summaryVals[1]) summaryVals[1].textContent = medCount;
+    if (summaryVals[2]) summaryVals[2].textContent = lowCount;
+
+    // Badge in alerts panel
+    const badge = document.querySelector('.alerts-header .badge-red');
+    const activeCount = incidents.filter(i => i.status === 'Active').length;
+    if (badge) badge.textContent = `${activeCount} Active`;
+}
+
+// Toast notification
+function showToast(data) {
+    let toast = document.getElementById('alert-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'alert-toast';
+        toast.style.cssText = `
+            position: fixed; top: 24px; right: 24px; z-index: 9999;
+            background: #1e293b; border: 1px solid #ef4444;
+            border-left: 4px solid #ef4444; border-radius: 10px;
+            padding: 16px 20px; min-width: 320px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            transform: translateX(120%); transition: transform 0.35s ease;
+        `;
+        document.body.appendChild(toast);
+    }
+
+    const color = data.severity === 'HIGH' ? '#ef4444' : '#eab308';
+    toast.style.borderColor = color;
+    toast.style.borderLeftColor = color;
+    toast.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <i class="fas fa-exclamation-triangle" style="color:${color};font-size:18px"></i>
+            <strong style="color:white;font-size:15px">Violence Alert [${data.severity}]</strong>
+        </div>
+        <p style="color:#94a3b8;font-size:13px;margin:0 0 4px">Camera: ${data.camera}</p>
+        <p style="color:#94a3b8;font-size:13px;margin:0 0 4px">Weapon: ${data.weapon} &nbsp;|&nbsp; Score: ${(data.score*100).toFixed(0)}%</p>
+        <p style="color:#64748b;font-size:12px;margin:0">${data.timestamp}</p>
+    `;
+
+    // Slide in
+    setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+    // Slide out after 6s
+    setTimeout(() => toast.style.transform = 'translateX(120%)', 6000);
+}
+
+// Add WS status indicator to sidebar header
+function addWsStatusBar() {
+    const sidebarHeader = document.querySelector('.sidebar-header');
+    if (!sidebarHeader || document.getElementById('ws-status-dot')) return;
+    const bar = document.createElement('div');
+    bar.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:#94a3b8';
+    bar.innerHTML = `
+        <span id="ws-status-dot" style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>
+        <span id="ws-status-text">Connecting…</span>
+    `;
+    sidebarHeader.appendChild(bar);
+}
+
+// Start WebSocket after login
+const origLogin = document.getElementById('login-form');
+if (origLogin) {
+    origLogin.addEventListener('submit', () => {
+        setTimeout(() => {
+            addWsStatusBar();
+            connectWebSocket();
+        }, 300);
+    });
+}
+function doLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorMessage = document.getElementById('error-message');
+
+    if (username && password) {
+        currentUser = username;
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+        setTimeout(() => {
+            addWsStatusBar();
+            connectWebSocket();
+        }, 300);
+    } else {
+        errorMessage.textContent = 'Please enter both username and password';
+        errorMessage.style.display = 'block';
+    }
+}
+

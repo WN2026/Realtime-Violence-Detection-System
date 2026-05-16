@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-yolo_model = YOLO("best.pt")
+yolo_model = YOLO("yolov8n.pt")
 
 def detect_weapon(frame):
 

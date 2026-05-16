@@ -2,7 +2,7 @@ import av
 import cv2
 import numpy as np
 
-rtsp_url = "**********************8"
+rtsp_url = 0  # Use 0 for webcam, or replace with your RTSP stream URL
 
 container = av.open(rtsp_url, options={"rtsp_transport": "tcp"})
 

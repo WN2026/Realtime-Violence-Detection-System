@@ -7,8 +7,8 @@ from tensorflow.keras.models import load_model
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 from storage_unit import save_violence_event, get_camera_info_by_stream
-from detection.weapon_detector import detect_weapon
-from classification.severity_classifier import classify_violence
+from weapon_detector import detect_weapon
+from severity_classifier import classify_violence
 from alerts_manager import alerts_manager
 
 SEQUENCE_LENGTH = 63
@@ -26,100 +26,62 @@ def polar(cx, cy, x, y):
 
 def read_stream(stream_url, frame_queue):
     try:
-        container = av.open(stream_url, options={"rtsp_transport": "tcp"})
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            print(f"Failed to open stream: {stream_url}")
+            return
         print(f"Stream opened : {stream_url}")
-    except av.AVError as e:
+    except Exception as e:
         print(f"Failed to open stream: {stream_url} | {e}")
         return
 
-    for frame in container.decode(video=0):
-        img = frame.to_ndarray(format='bgr24')
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
         if frame_queue.full():
             frame_queue.get()
-        frame_queue.put(img)
-    container.close()
+        frame_queue.put(frame)
+    cap.release()
 
-def process_frames(frame_queue, camera_id, location, tz_name ,stream_url):
+def process_frames(frame_queue, camera_id, location, tz_name, stream_url):
     model = load_model("best_acc_final.keras")
-    pose_estimator = TfPoseEstimator(get_graph_path("mobilenet_thin_432x368"), target_size=(432, 368))
     sequence = []
     prev_label = "NON VIOLENCE"
-    frame_id = 0 
+    frame_id = 0
 
     while True:
         if not frame_queue.empty():
             frame = frame_queue.get()
             frame_id += 1
-            humans = pose_estimator.inference(frame)
-            individuals = []
 
-            for human in humans:
-                person_points = []
-                xs, ys = [], []
-                for i in range(18):
-                    if i in human.body_parts:
-                        part = human.body_parts[i]
-                        x = int(part.x * frame.shape[1])
-                        y = int(part.y * frame.shape[0])
-                        person_points.append((x, y))
-                        xs.append(x)
-                        ys.append(y)
-                        cv2.circle(frame, (x, y), 4, (0, 255, 0), -1)
+            weapon_detected, weapon_type = detect_weapon(frame)
 
-                if len(person_points) > 5:
-                    individuals.append(person_points)
-                    x1, y1 = min(xs), min(ys)
-                    x2, y2 = max(xs), max(ys)
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            label = "NON VIOLENCE"
+            color = (0, 255, 0)
 
-            for person_points in individuals:
-                features = []
-                cx, cy = centroid(person_points)
-                for x, y in person_points:
-                    r, a = polar(cx, cy, x, y)
-                    features.extend([r, a, abs(x-cx)/(frame.shape[1]/2), abs(y-cy)/(frame.shape[0]/2)])
+            if weapon_detected:
+                level = classify_violence(1.0, weapon_type)
+                label = f"WEAPON DETECTED ({weapon_type})"
+                color = (0, 0, 255)
+                print(f"--- [ALERT] Weapon Detected: {weapon_type} ---")
 
-                features = np.array(features)
-                if len(features) < 72:
-                    features = np.pad(features, (0, 72-len(features)))
+                if prev_label == "NON VIOLENCE":
+                    save_violence_event(frame, camera_id, location, tz_name)
+                    alerts_manager.send_alert(
+                        camera_url=stream_url,
+                        severity=level,
+                        score=1.0,
+                        weapon_type=weapon_type,
+                        frame_id=frame_id
+                    )
 
-                sequence.append(features)
-                if len(sequence) > SEQUENCE_LENGTH:
-                    sequence.pop(0)
+                prev_label = level
 
-                label = "NON VIOLENCE"
-                color = (0, 255, 0)
+            else:
+                prev_label = "NON VIOLENCE"
 
-                if len(sequence) == SEQUENCE_LENGTH:
-                    input_data = np.array(sequence).reshape(1, 63, 72)
-                    prediction = model.predict(input_data, verbose=0, batch_size=1)
-                    score = prediction[0][0]
-
-                    weapon_detected, weapon_type = detect_weapon(frame)
-
-                    level = classify_violence(score, weapon_type)
-
-                    label = level
-                    if level == "NON VIOLENCE":
-                        color = (0, 255, 0)
-                    elif level == "LOW":
-                         color = (0, 255, 255)
-                    elif level == "MEDIUM":
-                      color = (0, 165, 255)
-                    else:  # HIGH
-                        color = (0, 0, 255)
-                    if level != "NON VIOLENCE" and prev_label == "NON VIOLENCE":
-                       save_violence_event(frame, camera_id, location, tz_name)
-                        alerts_manager.send_alert(
-                            camera_url=stream_url,
-                            severity=level,
-                            score=float(score),
-                            weapon_type=weapon_type if weapon_detected else "none",
-                            frame_id=frame_id
-                        )
-                    prev_label = level
-                cv2.putText(frame, label, (int(cx), int(cy)), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-
+            cv2.putText(frame, label, (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
             h, w = frame.shape[:2]
             scale = 900 / w
             display = cv2.resize(frame, (900, int(h * scale)))
@@ -134,7 +96,7 @@ def run_camera(stream_url):
     camera_id, location, tz_name = get_camera_info_by_stream(stream_url)
     frame_queue = Queue(maxsize=FRAME_QUEUE_SIZE)
     t_read = threading.Thread(target=read_stream, args=(stream_url, frame_queue), daemon=True)
-    t_process = threading.Thread(target=process_frames, args=(frame_queue, camera_id, location, tz_name,stream_url), daemon=True)
+    t_process = threading.Thread(target=process_frames, args=(frame_queue, camera_id, location, tz_name, stream_url), daemon=True)
     t_read.start()
     t_process.start()
     t_read.join()
