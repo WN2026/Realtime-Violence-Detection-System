@@ -297,3 +297,13 @@ Colocations handled automatically by placer.
 2026-05-16 19:34:17,704 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
 2026-05-16 19:34:17,766 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
 2026-05-16 19:35:18,997 [WARNING] [91m[ALERT] 2026-05-16 19:35:18 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:    261 | Camera: ************************************[0m
+2026-05-18 07:09:01,599 [INFO] AlertsManager initialised (cooldown=60s | Email=True)
+2026-05-18 07:09:02,894 [WARNING] From C:\Users\LENOVO\Realtime-Violence-Detection-System\venv\Lib\site-packages\keras\src\layers\normalization\batch_normalization.py:883: _colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+2026-05-18 07:09:06,726 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 07:09:06,880 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 07:09:06,887 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 07:09:07,095 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 07:09:07,202 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 07:09:23,803 [WARNING] [91m[ALERT] 2026-05-18 07:09:23 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:     59 | Camera: rtsp://192.168.1.12:554/Streaming/Channels/101[0m
