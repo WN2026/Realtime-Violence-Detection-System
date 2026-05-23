@@ -192,25 +192,45 @@ class AlertsManager:
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
+
             cursor.execute("""
-                UPDATE violence_events
-                SET Severity = %s, Confidence = %s
-                WHERE Camera_ID = (
-                    SELECT camera_id FROM cameras
-                    WHERE stream_url = %s
-                    LIMIT 1
-                )
-                ORDER BY Timestamp DESC
+                SELECT camera_id, location FROM cameras 
+                WHERE stream_url = %s 
                 LIMIT 1
-            """, (
-                severity,
-                f"{score:.0%}",
-                camera_url
-            ))
-            conn.commit()
+            """, (camera_url,))
+            result = cursor.fetchone()
+
+            if result:
+                camera_id, location = result
+                
+                
+                formatted_time_file = timestamp.strftime('%Y%m%d_%H%M%S')
+                image_path = f"violence_images\\violence_{formatted_time_file}.jpg"
+                
+                query = """
+                    INSERT INTO violence_events 
+                    (Camera_ID, Timestamp, location, Severity, Confidence, evidence)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                
+                formatted_time_db = timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                confidence_str = f"{score:.0%}"
+                
+                cursor.execute(query, (
+                    camera_id,
+                    formatted_time_db,
+                    location,
+                    severity,         
+                    confidence_str,   
+                    image_path        
+                ))
+                conn.commit()
+                logger.info(" Success: Event fully logged with Severity, Confidence and Image Path!")
+
+            cursor.close()
             conn.close()
         except Exception as exc:
-            logger.error("DB write failed: %s", exc)
+            logger.error(" DB write failed: %s", exc)
 
     def _log_alert(self, camera_url, severity, score, weapon_type, frame_id, timestamp):
         color = SEVERITY_CONFIG.get(severity, {}).get("color", "")

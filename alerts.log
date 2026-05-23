@@ -307,3 +307,25 @@ Colocations handled automatically by placer.
 2026-05-18 07:09:07,095 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
 2026-05-18 07:09:07,202 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
 2026-05-18 07:09:23,803 [WARNING] [91m[ALERT] 2026-05-18 07:09:23 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:     59 | Camera: rtsp://192.168.1.12:554/Streaming/Channels/101[0m
+2026-05-18 08:38:46,474 [INFO] AlertsManager initialised (cooldown=60s | Email=True)
+2026-05-18 08:38:47,980 [WARNING] From C:\Users\LENOVO\Realtime-Violence-Detection-System\venv\Lib\site-packages\keras\src\layers\normalization\batch_normalization.py:883: _colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+2026-05-18 08:38:51,963 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 08:38:52,261 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 08:38:52,323 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 08:38:52,372 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 08:38:52,492 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 08:38:55,568 [WARNING] [91m[ALERT] 2026-05-18 08:38:55 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:      1 | Camera: rtsp://192.168.1.13:554/Streaming/Channels/101[0m
+2026-05-18 08:39:25,592 [WARNING] [91m[ALERT] 2026-05-18 08:39:25 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:    130 | Camera: rtsp://192.168.1.13:554/Streaming/Channels/101[0m
+2026-05-18 09:04:04,370 [INFO] AlertsManager initialised (cooldown=60s | Email=True)
+2026-05-18 09:04:06,131 [WARNING] From C:\Users\LENOVO\Realtime-Violence-Detection-System\venv\Lib\site-packages\keras\src\layers\normalization\batch_normalization.py:883: _colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+2026-05-18 09:04:10,847 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 09:04:10,995 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 09:04:11,191 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 09:04:11,239 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 09:04:11,320 [WARNING] OMP_NUM_THREADS is no longer used by the default Keras config. To configure the number of threads, use tf.config.threading APIs.
+2026-05-18 09:04:15,531 [INFO]  Success: Event fully logged with Severity, Confidence and Image Path!
+2026-05-18 09:04:15,532 [WARNING] [91m[ALERT] 2026-05-18 09:04:15 | Severity: HIGH         | Score: 1.00 | Weapon: knife      | Frame:      5 | Camera: rtsp://192.168.1.13:554/Streaming/Channels/101[0m
