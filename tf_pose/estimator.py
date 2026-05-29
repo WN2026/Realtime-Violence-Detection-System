@@ -11,6 +11,7 @@ from scipy.ndimage import maximum_filter, gaussian_filter
 from tf_pose import common
 from tf_pose.common import CocoPairsNetwork, CocoPairs, CocoPart
 import tensorflow.compat.v1 as tf
+
 tf.disable_v2_behavior()
 logger = logging.getLogger('TfPoseEstimator')
 logger.setLevel(logging.INFO)
@@ -281,40 +282,7 @@ class TfPoseEstimator:
     def __del__(self):
         self.persistent_sess.close()
 
-    @staticmethod
-    def _quantize_img(npimg):
-        npimg_q = npimg + 1.0
-        npimg_q /= (2.0 / 2**8)
-        # npimg_q += 0.5
-        npimg_q = npimg_q.astype(np.uint8)
-        return npimg_q
-
-    @staticmethod
-    def draw_humans(npimg, humans, imgcopy=False):
-        if imgcopy:
-            npimg = np.copy(npimg)
-        image_h, image_w = npimg.shape[:2]
-        centers = {}
-        for human in humans:
-            # draw point
-            for i in range(common.CocoPart.Background.value):
-                if i not in human.body_parts.keys():
-                    continue
-
-                body_part = human.body_parts[i]
-                center = (int(body_part.x * image_w + 0.5), int(body_part.y * image_h + 0.5))
-                centers[i] = center
-                cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
-
-            # draw line
-            for pair_order, pair in enumerate(common.CocoPairsRender):
-                if pair[0] not in human.body_parts.keys() or pair[1] not in human.body_parts.keys():
-                    continue
-
-                npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
-
-        return npimg
-
+    
     def _get_scaled_img(self, npimg, scale):
         get_base_scale = lambda s, w, h: max(self.target_size[0] / float(w), self.target_size[1] / float(h)) * s
         img_h, img_w = npimg.shape[:2]
@@ -387,10 +355,6 @@ class TfPoseEstimator:
         if not isinstance(scales, list):
             scales = [None]
 
-        if self.tensor_image.dtype == tf.quint8:
-            # quantize input image
-            npimg = TfPoseEstimator._quantize_img(npimg)
-            pass
 
         rois = []
         infos = []

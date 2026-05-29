@@ -151,6 +151,8 @@ def save_violence_event(frame, camera_id, location, tz_name,score,level):
     time_now = datetime.datetime.now(tz)
     time_now_str = time_now.strftime("%Y-%m-%d %H:%M:%S")
 
+    score = f"{score * 100:.0f}%" 
+
     
 
     if not os.path.exists("violence_images"):
