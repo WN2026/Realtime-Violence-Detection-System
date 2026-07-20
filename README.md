@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/img.png" alt="YAQIDH Banner" width="100%">
+  <img src="assets/img.png" alt="YAQIDH Banner" >
 </p>
 
 ## Overview
