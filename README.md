@@ -31,18 +31,18 @@ The system is intended for schools, universities, hospitals, shopping malls, pub
 ```text
 Realtime-Violence-Detection-System/
 
-âââ run.py
-âââ processing_unit.py
-âââ storage_unit.py
-âââ alerts_manager.py
-âââ severity_classifier.py
-âââ weapon_detector.py
-âââ best_acc_final.keras
-âââ frontend/
-âââ tf_pose/
-âââ datasets/
-âââ performance_test/
-âââ models/
+run.py
+processing_unit.py
+storage_unit.py
+alerts_manager.py
+severity_classifier.py
+weapon_detector.py
+best_acc_final.keras
+frontend/
+tf_pose/
+datasets/
+performance_test/
+models/
 ```
 
 ---
@@ -192,11 +192,6 @@ git clone <repository-url>
 cd Realtime-Violence-Detection-System
 ```
 
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
 
 Configure the MySQL connection inside:
 
@@ -253,19 +248,6 @@ The model receives temporal sequences of body pose features extracted by TF-Pose
 
 ---
 
-# Future Improvements
-
-- Email notifications.
-- SMS notifications.
-- Push notifications.
-- Mobile application.
-- Cloud deployment.
-- Face recognition integration.
-- Automatic emergency service notification.
-- Improved pose estimation models.
-- Higher detection accuracy.
-
----
 
 # License
 
