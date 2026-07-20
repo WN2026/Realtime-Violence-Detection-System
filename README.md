@@ -1,4 +1,6 @@
-# Real-Time Violence Detection System
+<p align="center">
+  <img src="assets/img.png" alt="YAQIDH Banner" width="100%">
+</p>
 
 ## Overview
 
