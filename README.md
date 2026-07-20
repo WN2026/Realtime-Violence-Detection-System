@@ -33,18 +33,18 @@ The system is intended for schools, universities, hospitals, shopping malls, pub
 ```text
 Realtime-Violence-Detection-System/
 
-run.py
-processing_unit.py
-storage_unit.py
-alerts_manager.py
-severity_classifier.py
-weapon_detector.py
-best_acc_final.keras
-frontend/
-tf_pose/
-datasets/
-performance_test/
-models/
+├── run.py
+├── processing_unit.py
+├── storage_unit.py
+├── alerts_manager.py
+├── severity_classifier.py
+├── weapon_detector.py
+├── best_acc_final.keras
+├── frontend/
+├── tf_pose/
+├── datasets/
+├── performance_test/
+├── models/
 ```
 
 ---
